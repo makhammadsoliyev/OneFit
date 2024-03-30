@@ -1,4 +1,6 @@
-﻿namespace OneFit.DataAccess.Repositories.Enrollments;
+﻿using OneFit.Domain.Entities;
+
+namespace OneFit.DataAccess.Repositories.Enrollments;
 
 public interface IEnrollmentRepository
 {
