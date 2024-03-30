@@ -1,4 +1,6 @@
-﻿namespace OneFit.DataAccess.Repositories.Categories;
+﻿using OneFit.Domain.Entities;
+
+namespace OneFit.DataAccess.Repositories.Categories;
 
 public interface ICategoryRepository
 {
