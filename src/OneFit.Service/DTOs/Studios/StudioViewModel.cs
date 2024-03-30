@@ -1,10 +1,10 @@
-using OneFit.Domain.Commons;
-using OneFit.Domain.Enums;
+﻿using OneFit.Domain.Enums;
 
-namespace OneFit.Domain.Entities;
+namespace OneFit.Service.DTOs.Studios;
 
-public class Studio : Auditable
+public class StudioViewModel
 {
+    public long Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public string Address { get; set; }

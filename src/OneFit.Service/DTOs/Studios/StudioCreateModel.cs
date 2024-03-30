@@ -1,9 +1,8 @@
-using OneFit.Domain.Commons;
-using OneFit.Domain.Enums;
+﻿using OneFit.Domain.Enums;
 
-namespace OneFit.Domain.Entities;
+namespace OneFit.Service.DTOs.Studios;
 
-public class Studio : Auditable
+public class StudioCreateModel
 {
     public string Name { get; set; }
     public string Description { get; set; }
