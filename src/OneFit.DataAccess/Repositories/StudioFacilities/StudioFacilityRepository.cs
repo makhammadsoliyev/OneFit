@@ -1,31 +1,62 @@
-﻿using OneFit.Domain.Entities;
+﻿using Dapper;
+using OneFit.DataAccess.Contexts;
+using OneFit.Domain.Entities;
 
 namespace OneFit.DataAccess.Repositories.StudioFacilities;
 
-internal class StudioFacilityRepository : IStudioFacilityRepository
+public class StudioFacilityRepository(AppDbContext context) : IStudioFacilityRepository
 {
-    public Task<bool> DeleteAsync(long id)
+    public async Task<bool> DeleteAsync(long id)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                DELETE StudioFacilities WHERE Id = @id;
+                """;
+
+        return await connection.ExecuteAsync(sql, new { id }) > 0;
     }
 
-    public Task<StudioFacility> InsertAsync(StudioFacility model)
+    public async Task<StudioFacility> InsertAsync(StudioFacility model)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                INSERT INTO StudioFacilities (FacilityId, StudioId)
+                VALUES (@FacilityId, @StudioId);
+                """;
+
+        return await connection.ExecuteScalarAsync<StudioFacility>(sql, model);
     }
 
-    public Task<IEnumerable<StudioFacility>> SelectAllAsync()
+    public async Task<IEnumerable<StudioFacility>> SelectAllAsync()
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                SELCT * FROM StudioFacilities;
+                """;
+
+        return await connection.QueryAsync<StudioFacility>(sql);
     }
 
-    public Task<StudioFacility> SelectByIdASync(long id)
+    public async Task<StudioFacility> SelectByIdASync(long id)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                SELCT * FROM StudioFacilities WHERE id = @id;
+                """;
+
+        return await connection.QuerySingleOrDefaultAsync<StudioFacility>(sql, new { id });
     }
 
-    public Task<bool> UpdateAsync(StudioFacility model)
+    public async Task<bool> UpdateAsync(StudioFacility model)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                UPDATE Categories
+                SET FacilityId = @FacilityId, 
+                    StudioId = @StudioId,
+                    UpdatedAt = current_timestamp
+                """;
+
+        return await connection.ExecuteAsync(sql, model) > 0;
     }
 }
