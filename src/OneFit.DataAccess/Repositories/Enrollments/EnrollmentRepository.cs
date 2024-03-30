@@ -2,7 +2,7 @@
 
 public class EnrollmentRepository : IEnrollmentRepository
 {
-    public Task<bool> DeleteAsync(long id)
+    /*public Task<bool> DeleteAsync(long id)
     {
         throw new NotImplementedException();
     }
@@ -25,5 +25,5 @@ public class EnrollmentRepository : IEnrollmentRepository
     public Task<bool> UpdateAsync(Enrollment model)
     {
         throw new NotImplementedException();
-    }
+    }*/
 }

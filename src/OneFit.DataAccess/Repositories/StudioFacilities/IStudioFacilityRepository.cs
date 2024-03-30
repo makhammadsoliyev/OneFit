@@ -1,4 +1,6 @@
-﻿namespace OneFit.DataAccess.Repositories.StudioFacilities;
+﻿using OneFit.Domain.Entities;
+
+namespace OneFit.DataAccess.Repositories.StudioFacilities;
 
 public interface IStudioFacilityRepository
 {

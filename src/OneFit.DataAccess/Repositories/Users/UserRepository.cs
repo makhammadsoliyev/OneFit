@@ -6,28 +6,59 @@ namespace OneFit.DataAccess.Repositories.Users;
 
 public class UserRepository(AppDbContext context) : IUserRepository
 {
-    public Task<bool> DeleteAsync(long id)
+    public async Task<bool> DeleteAsync(long id)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+        DELETE Users WHERE Id = @id;
+        """;
+
+        return await connection.ExecuteAsync(sql, new { id }) > 0;
     }
 
-    public Task<User> InsertAsync(User model)
+    public async Task<User> InsertAsync(User model)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+        INSERT INTO Users (FirstName, LastName, Phone, Password)
+        VALUES (@Title, @FirstName, @LastName, @Phone, @Password)
+        """;
+
+        return await connection.ExecuteScalarAsync<User>(sql, model);
     }
 
-    public Task<IEnumerable<User>> SelectAllAsync()
+    public async Task<IEnumerable<User>> SelectAllAsync()
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+        SELCT * FROM Users;
+        """;
+
+        return await connection.QueryAsync<User>(sql);
     }
 
-    public Task<User> SelectByIdASync(long id)
+    public async Task<User> SelectByIdASync(long id)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+        SELCT * FROM Users WHERE id = @id;
+        """;
+
+        return await connection.QuerySingleOrDefaultAsync<User>(sql, new { id });
     }
 
-    public Task<bool> UpdateAsync(User model)
+    public async Task<bool> UpdateAsync(User model)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+        UPDATE Users
+        SET FirstName = @FirstName,
+            LastName = @LastName,
+            Phone = @Phone,
+            Password = @Password,
+            UpdatedAt = current_timestamp
+        """;
+
+        return await connection.ExecuteAsync(sql, model) > 0;
     }
 }
