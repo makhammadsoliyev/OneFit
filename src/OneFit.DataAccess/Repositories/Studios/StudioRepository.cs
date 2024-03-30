@@ -56,7 +56,7 @@ public class StudioRepository(AppDbContext context) : IStudioRepository
                     Description = @Description,
                     Address = @Address,
                     StudioType = @StudioType,
-                    CategoryId = @CategoryId
+                    CategoryId = @CategoryId,
                     UpdatedAt = current_timestamp
                 """;
 
