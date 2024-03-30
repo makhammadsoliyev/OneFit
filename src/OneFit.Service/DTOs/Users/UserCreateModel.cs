@@ -1,4 +1,4 @@
-﻿namespace OneFit.Service.DTOs.Users;
+namespace OneFit.Service.DTOs.Users;
 
 public class UserCreateModel
 {
