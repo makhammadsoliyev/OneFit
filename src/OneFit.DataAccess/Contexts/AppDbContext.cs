@@ -1,14 +1,19 @@
 ﻿using Dapper;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Npgsql;
+using OneFit.DataAccess.Configurations;
 using System.Data;
 
 namespace OneFit.DataAccess.Contexts;
 
-public class AppDbContext(IConfiguration configuration)
+public class AppDbContext(IOptions<DbSettings> dbSettings)
 {
+    private readonly DbSettings dbSettings = dbSettings.Value;
     public IDbConnection CreateConnection()
-        => new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
+    {
+        var connectionString = $"Host={dbSettings.Server}; Database={dbSettings.Database}; Username={dbSettings.UserId}; Password={dbSettings.Password};";
+        return new NpgsqlConnection(connectionString);
+    }
 
     public async Task Init()
     {
@@ -18,13 +23,14 @@ public class AppDbContext(IConfiguration configuration)
 
     private async Task InitDatabase()
     {
-        using var connection = CreateConnection();
-        var sqlDbCount = $"SELECT COUNT(*) FROM pg_database WHERE datname = 'OneFitDb'";
-        var dbCount = await connection.ExecuteScalarAsync<int>(sqlDbCount);
+        var connectionString = $"Host={dbSettings.Server}; Database=postgres; Username={dbSettings.UserId}; Password={dbSettings.Password};";
+        using var connection = new NpgsqlConnection(connectionString);
 
+        var sqlDbCount = $"SELECT COUNT(*) FROM pg_database WHERE datname = '{dbSettings.Database}';";
+        var dbCount = await connection.ExecuteScalarAsync<int>(sqlDbCount);
         if (dbCount == 0)
         {
-            var sql = $"CREATE DATABASE OneFitDb";
+            var sql = $"CREATE DATABASE \"{dbSettings.Database}\"";
             await connection.ExecuteAsync(sql);
         }
     }
@@ -48,8 +54,8 @@ public class AppDbContext(IConfiguration configuration)
                 "LastrName" varchar,
                 "Phone" varchar,
                 "Password" varchar
-            );
-            """;
+                );
+                """;
 
             await connection.ExecuteAsync(sql);
         }
@@ -62,8 +68,8 @@ public class AppDbContext(IConfiguration configuration)
                 "Name" varchar,
                 "CreatedAt" timestamp default current_timestamp,
                 "UpdatedAt" timestamp default null
-            );
-            """;
+                );
+                """;
 
             await connection.ExecuteAsync(sql);
         }
@@ -80,8 +86,8 @@ public class AppDbContext(IConfiguration configuration)
                 "CategoryId" bigint,
                 "CreatedAt" timestamp default current_timestamp,
                 "UpdatedAt" timestamp default null
-            );
-            """;
+                );
+                """;
 
             await connection.ExecuteAsync(sql);
         }
@@ -94,8 +100,8 @@ public class AppDbContext(IConfiguration configuration)
                 "Name" varchar,
                 "CreatedAt" timestamp default current_timestamp,
                 "UpdatedAt" timestamp default null
-            );
-            """;
+                );
+                """;
 
             await connection.ExecuteAsync(sql);
         }
@@ -109,8 +115,8 @@ public class AppDbContext(IConfiguration configuration)
                 "FacilityId" bigint,
                 "CreatedAt" timestamp default current_timestamp,
                 "UpdatedAt" timestamp default null
-            );
-            """;
+                );
+                """;
 
             await connection.ExecuteAsync(sql);
         }
@@ -124,8 +130,8 @@ public class AppDbContext(IConfiguration configuration)
                 "UserId" bigint,
                 "CreatedAt" timestamp default current_timestamp,
                 "UpdatedAt" timestamp default null
-            );
-            """;
+                );
+                """;
 
             await connection.ExecuteAsync(sql);
         }

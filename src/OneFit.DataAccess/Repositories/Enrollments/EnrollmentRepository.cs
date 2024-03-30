@@ -4,7 +4,7 @@ namespace OneFit.DataAccess.Repositories.Enrollments;
 
 public class EnrollmentRepository : IEnrollmentRepository
 {
-    public Task<Enrollment> DeleteAsync(long id)
+    /*public Task<bool> DeleteAsync(long id)
     {
         throw new NotImplementedException();
     }
@@ -27,5 +27,5 @@ public class EnrollmentRepository : IEnrollmentRepository
     public Task<Enrollment> UpdateAsync(Enrollment model)
     {
         throw new NotImplementedException();
-    }
+    }*/
 }

@@ -1,8 +1,10 @@
-﻿namespace OneFit.DataAccess.Repositories.Facilities;
+﻿using OneFit.Domain.Entities;
+
+namespace OneFit.DataAccess.Repositories.Facilities;
 
 public class FacilityRepository : IFacilityRepository
 {
-    public Task<bool> DeleteAsync(long id)
+    public Task<Facility> DeleteAsync(long id)
     {
         throw new NotImplementedException();
     }
@@ -22,7 +24,7 @@ public class FacilityRepository : IFacilityRepository
         throw new NotImplementedException();
     }
 
-    public Task<bool> UpdateAsync(Facility model)
+    public Task<Facility> UpdateAsync(Facility model)
     {
         throw new NotImplementedException();
     }

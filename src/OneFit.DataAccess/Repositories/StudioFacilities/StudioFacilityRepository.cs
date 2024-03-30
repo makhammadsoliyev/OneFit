@@ -1,8 +1,10 @@
-﻿namespace OneFit.DataAccess.Repositories.StudioFacilities;
+﻿using OneFit.Domain.Entities;
+
+namespace OneFit.DataAccess.Repositories.StudioFacilities;
 
 internal class StudioFacilityRepository : IStudioFacilityRepository
 {
-    public Task<StudioFacility> DeleteAsync(long id)
+    public Task<bool> DeleteAsync(long id)
     {
         throw new NotImplementedException();
     }
@@ -22,7 +24,7 @@ internal class StudioFacilityRepository : IStudioFacilityRepository
         throw new NotImplementedException();
     }
 
-    public Task<StudioFacility> UpdateAsync(StudioFacility model)
+    public Task<bool> UpdateAsync(StudioFacility model)
     {
         throw new NotImplementedException();
     }

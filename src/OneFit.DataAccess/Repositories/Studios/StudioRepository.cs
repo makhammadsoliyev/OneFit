@@ -1,4 +1,6 @@
-﻿namespace OneFit.DataAccess.Repositories.Studios;
+﻿using OneFit.Domain.Entities;
+
+namespace OneFit.DataAccess.Repositories.Studios;
 
 public class StudioRepository : IStudioRepository
 {

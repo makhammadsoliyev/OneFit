@@ -1,4 +1,6 @@
-﻿namespace OneFit.DataAccess.Repositories.Facilities;
+﻿using OneFit.Domain.Entities;
+
+namespace OneFit.DataAccess.Repositories.Facilities;
 
 public interface IFacilityRepository
 {
