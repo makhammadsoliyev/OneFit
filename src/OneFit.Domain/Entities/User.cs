@@ -1,6 +1,8 @@
-﻿namespace OneFit.Domain.Entities;
+﻿using OneFit.Domain.Commons;
 
-public class User
+namespace OneFit.Domain.Entities;
+
+public class User:Auditable
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

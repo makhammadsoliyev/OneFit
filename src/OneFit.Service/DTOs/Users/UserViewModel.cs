@@ -1,4 +1,4 @@
-﻿namespace OneFit.Service.DTOs;
+namespace OneFit.Service.DTOs.Users;
 
 public class UserViewModel
 {
