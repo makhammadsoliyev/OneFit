@@ -1,10 +1,11 @@
-﻿using OneFit.Domain.Entities;
+﻿using OneFit.DataAccess.Contexts;
+using OneFit.Domain.Entities;
 
 namespace OneFit.DataAccess.Repositories.Studios;
 
-public class StudioRepository : IStudioRepository
+public class StudioRepository(AppDbContext context) : IStudioRepository
 {
-    public Task<bool> DeleteAsync(long id)
+    public async Task<bool> DeleteAsync(long id)
     {
         throw new NotImplementedException();
     }

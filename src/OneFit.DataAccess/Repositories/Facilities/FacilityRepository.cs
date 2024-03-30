@@ -1,31 +1,62 @@
-﻿using OneFit.Domain.Entities;
+﻿using Dapper;
+using OneFit.DataAccess.Contexts;
+using OneFit.Domain.Entities;
 
 namespace OneFit.DataAccess.Repositories.Facilities;
 
-public class FacilityRepository : IFacilityRepository
+public class FacilityRepository(AppDbContext context) : IFacilityRepository
 {
-    public Task<Facility> DeleteAsync(long id)
+    public async Task<bool> DeleteAsync(long id)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                DELETE Facilities WHERE Id = @id;
+                """;
+
+        return await connection.ExecuteAsync(sql, new { id }) > 0;
     }
 
-    public Task<Facility> InsertAsync(Facility model)
+    public async Task<Facility> InsertAsync(Facility model)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                INSERT INTO Facilities (Name)
+                VALUES (@Name)
+                """;
+
+        return await connection.ExecuteScalarAsync<Facility>(sql, model);
     }
 
-    public Task<IEnumerable<Facility>> SelectAllAsync()
+    public async Task<IEnumerable<Facility>> SelectAllAsync()
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                SELCT * FROM Facilities;
+                """;
+
+        return await connection.QueryAsync<Facility>(sql);
     }
 
-    public Task<Facility> SelectByIdASync(long id)
+    public async Task<Facility> SelectByIdASync(long id)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                SELCT * FROM Facilities WHERE id = @id;
+                """;
+
+        return await connection.QuerySingleOrDefaultAsync<Facility>(sql, new { id });
     }
 
-    public Task<Facility> UpdateAsync(Facility model)
+    public async Task<bool> UpdateAsync(Facility model)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                UPDATE Facilities
+                SET Name = @Name,
+                    CategoryId = @CategoryId,
+                    UpdatedAt = current_timestamp
+                """;
+
+        return await connection.ExecuteAsync(sql, model) > 0;
     }
 }
