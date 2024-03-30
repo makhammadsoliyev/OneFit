@@ -10,8 +10,8 @@ public class UserRepository(AppDbContext context) : IUserRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-        DELETE Users WHERE Id = @id;
-        """;
+                DELETE Users WHERE Id = @id;
+                """;
 
         return await connection.ExecuteAsync(sql, new { id }) > 0;
     }
@@ -20,9 +20,9 @@ public class UserRepository(AppDbContext context) : IUserRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-        INSERT INTO Users (FirstName, LastName, Phone, Password)
-        VALUES (@Title, @FirstName, @LastName, @Phone, @Password)
-        """;
+                INSERT INTO Users (FirstName, LastName, Phone, Password)
+                VALUES (@Title, @FirstName, @LastName, @Phone, @Password)
+                """;
 
         return await connection.ExecuteScalarAsync<User>(sql, model);
     }
@@ -31,8 +31,8 @@ public class UserRepository(AppDbContext context) : IUserRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-        SELCT * FROM Users;
-        """;
+                SELCT * FROM Users;
+                """;
 
         return await connection.QueryAsync<User>(sql);
     }
@@ -41,8 +41,8 @@ public class UserRepository(AppDbContext context) : IUserRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-        SELCT * FROM Users WHERE id = @id;
-        """;
+                SELCT * FROM Users WHERE id = @id;
+                """;
 
         return await connection.QuerySingleOrDefaultAsync<User>(sql, new { id });
     }
@@ -51,13 +51,13 @@ public class UserRepository(AppDbContext context) : IUserRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-        UPDATE Users
-        SET FirstName = @FirstName,
-            LastName = @LastName,
-            Phone = @Phone,
-            Password = @Password,
-            UpdatedAt = current_timestamp
-        """;
+                UPDATE Users
+                SET FirstName = @FirstName,
+                    LastName = @LastName,
+                    Phone = @Phone,
+                    Password = @Password,
+                    UpdatedAt = current_timestamp
+                """;
 
         return await connection.ExecuteAsync(sql, model) > 0;
     }

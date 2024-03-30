@@ -1,5 +1,3 @@
-using OneFit.Domain.Entities;
-
 namespace OneFit.Service.DTOs.StudioFacilities;
 
 public class StudioFacilityViewModel
