@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using OneFit.DataAccess.Configurations;
 using OneFit.DataAccess.Contexts;
 using OneFit.DataAccess.Repositories.Categories;
@@ -5,6 +6,7 @@ using OneFit.DataAccess.Repositories.Facilities;
 using OneFit.DataAccess.Repositories.StudioFacilities;
 using OneFit.DataAccess.Repositories.Studios;
 using OneFit.DataAccess.Repositories.Users;
+using OneFit.WebApi.Helpers;
 using OneFit.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +30,10 @@ builder.Services.AddScoped<IStudioFacilityRepository, StudioFacilityRepository>(
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+builder.Services.AddControllers(options
+    => options.Conventions
+        .Add(new RouteTokenTransformerConvention(new RouteParameterTransformer())));
 
 var app = builder.Build();
 
