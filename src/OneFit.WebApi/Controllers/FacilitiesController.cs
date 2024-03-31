@@ -7,11 +7,11 @@ namespace OneFit.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class FacilityController : ControllerBase
+public class FacilitiesController : ControllerBase
 {
     private readonly IFacilityService _facilityService;
 
-    public FacilityController(IFacilityService facilityService)
+    public FacilitiesController(IFacilityService facilityService)
     {
         this._facilityService = facilityService;
     }
