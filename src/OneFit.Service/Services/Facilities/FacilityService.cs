@@ -1,11 +1,12 @@
 using AutoMapper;
 using OneFit.DataAccess.Repositories.Facilities;
+using OneFit.Domain.Entities;
 using OneFit.Service.DTOs.Facilities;
 using OneFit.Service.Exceptions;
 
-namespace OneFit.Service.Services.Facility;
+namespace OneFit.Service.Services.Facilities;
 
-public class FacilityService:IFacilityService
+public class FacilityService : IFacilityService
 {
     private readonly IFacilityRepository _facilityRepository; 
     private readonly IMapper _mapper;
@@ -24,7 +25,7 @@ public class FacilityService:IFacilityService
                     throw new CustomException(403,"Facility already exist");
         var createFacility = await _facilityRepository
                                     .InsertAsync(this._mapper
-                                    .Map<Domain.Entities.Facility>(facilityCreateModel));
+                                    .Map<Facility>(facilityCreateModel));
         return this._mapper.Map<FacilityViewModel>(createFacility);
     }
 

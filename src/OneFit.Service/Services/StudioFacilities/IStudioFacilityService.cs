@@ -1,6 +1,6 @@
 using OneFit.Service.DTOs.StudioFacilities;
 
-namespace OneFit.Service.Services.StudioFacility;
+namespace OneFit.Service.Services.StudioFacilities;
 
 public interface IStudioFacilityService
 {

@@ -1,16 +1,17 @@
 using AutoMapper;
 using OneFit.DataAccess.Repositories.StudioFacilities;
+using OneFit.Domain.Entities;
 using OneFit.Service.DTOs.StudioFacilities;
 using OneFit.Service.Exceptions;
 
-namespace OneFit.Service.Services.StudioFacility;
+namespace OneFit.Service.Services.StudioFacilities;
 
-public class StudioFacilityService:IStudioFacilityService
+public class StudioFacilityService : IStudioFacilityService
 {
     private readonly IStudioFacilityRepository _repository;
     private readonly IMapper _mapper;
 
-    public StudioFacilityService(IStudioFacilityRepository repository,IMapper mapper)
+    public StudioFacilityService(IStudioFacilityRepository repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
@@ -26,7 +27,8 @@ public class StudioFacilityService:IStudioFacilityService
             throw new CustomException(403, "StudioFacility already exist");
         var createStudioFacility = await _repository
                                   .InsertAsync(this._mapper
-                                  .Map<Domain.Entities.StudioFacility>(studioFacilityCreateModel));
+                                  .Map<StudioFacility>(studioFacilityCreateModel));
+
         return this._mapper.Map<StudioFacilityViewModel>(createStudioFacility);
     }
 
@@ -39,6 +41,7 @@ public class StudioFacilityService:IStudioFacilityService
         existStudioFacility.FacilityId = studioFacilityUpdateModel.FacilityId;
         existStudioFacility.StudioId = studioFacilityUpdateModel.StudioId;
         existStudioFacility.UpdatedAt = DateTime.UtcNow;
+
         return this._mapper.Map<StudioFacilityViewModel>(await _repository
                            .UpdateAsync(existStudioFacility));
     }
@@ -49,6 +52,7 @@ public class StudioFacilityService:IStudioFacilityService
                                   .SelectAllAsync())
                                   .FirstOrDefault(s => s.Id == id)
                                   ?? throw new CustomException(404, "StudioFacility not found");
+
         return await _repository.DeleteAsync(id);
     }
 
@@ -58,6 +62,7 @@ public class StudioFacilityService:IStudioFacilityService
                                   .SelectAllAsync())
                                   .FirstOrDefault(s => s.Id == id)
                                   ?? throw new CustomException(404, "StudioFacility not found");
+
         return this._mapper.Map<StudioFacilityViewModel>(existStudioFacility);
     }
 
