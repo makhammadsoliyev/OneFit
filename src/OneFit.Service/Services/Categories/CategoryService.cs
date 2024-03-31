@@ -64,7 +64,9 @@ public class CategoryService : ICategoryService
 
         existCategory.Name = categoryUpdateModel.Name;
         existCategory.UpdatedAt = DateTime.UtcNow;
-        return this.mapper.Map<CategoryViewModel>(await categoryRepository
-                          .UpdateAsync(existCategory));
+
+        await categoryRepository.UpdateAsync(existCategory)
+        
+        return this.mapper.Map<CategoryViewModel>(existCategory);
     }
 }
