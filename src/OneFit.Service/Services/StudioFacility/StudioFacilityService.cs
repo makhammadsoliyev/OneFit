@@ -15,6 +15,7 @@ public class StudioFacilityService:IStudioFacilityService
         _repository = repository;
         _mapper = mapper;
     }
+    
     public async Task<StudioFacilityViewModel> CreateAsync(StudioFacilityCreateModel studioFacilityCreateModel)
     {
         var existStudioFacilityViewModel = (await _repository.SelectAllAsync())
