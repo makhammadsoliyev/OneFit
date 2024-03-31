@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using OneFit.DataAccess.Contexts;
 using OneFit.Domain.Entities;
 
