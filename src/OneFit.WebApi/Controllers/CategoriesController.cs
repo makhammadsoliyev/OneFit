@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OneFit.Service.DTOs.Categories;
-using OneFit.Service.DTOs.Studios;
 using OneFit.Service.Services.Categories;
-using OneFit.Service.Services.Studios;
 using OneFit.WebApi.Models;
 
 namespace OneFit.WebApi.Controllers
@@ -66,7 +64,7 @@ namespace OneFit.WebApi.Controllers
             });
         }
 
-        // DELETE api/<CAtegoriesController>/
+        // DELETE api/<CategoriesController>/
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
