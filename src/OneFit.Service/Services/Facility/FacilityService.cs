@@ -1,7 +1,6 @@
 using AutoMapper;
 using OneFit.DataAccess.Repositories.Facilities;
 using OneFit.Service.DTOs.Facilities;
-using OneFit.Domain.Entities;
 using OneFit.Service.Exceptions;
 
 namespace OneFit.Service.Services.Facility;
@@ -20,8 +19,9 @@ public class FacilityService:IFacilityService
     {
         var existFacility = (await _facilityRepository
                     .SelectAllAsync())
-                    .FirstOrDefault(f => f.Name == facilityCreateModel.Name) 
-                    ?? throw new CustomException(403,"Facility already exist");
+                    .FirstOrDefault(f => f.Name == facilityCreateModel.Name) ;
+        if(existFacility is not null)
+                    throw new CustomException(403,"Facility already exist");
         var createFacility = await _facilityRepository
                                     .InsertAsync(this._mapper
                                     .Map<Domain.Entities.Facility>(facilityCreateModel));
@@ -42,7 +42,7 @@ public class FacilityService:IFacilityService
 
     public async Task<bool> DeleteAsync(long id)
     {
-        var existStudioFacility = _facilityRepository.SelectByIdASync(id)
+        var existStudioFacility = await _facilityRepository.SelectByIdASync(id)
                                   ??throw new CustomException(404,"Facility not found");
         return await _facilityRepository.DeleteAsync(id);
     }
