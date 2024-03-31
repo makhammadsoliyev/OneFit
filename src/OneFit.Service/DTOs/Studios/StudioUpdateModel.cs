@@ -1,15 +1,12 @@
-using OneFit.Domain.Commons;
-using OneFit.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using OneFit.Domain.Enums;
 
-namespace OneFit.Domain.Entities;
+namespace OneFit.Service.DTOs.Studios;
 
-public class Studio : Auditable
+public class StudioUpdateModel
 {
     public string Name { get; set; }
     public string Description { get; set; }
     public string Address { get; set; }
-    [EnumDataType(typeof(StudioType))]
     public StudioType Type { get; set; }
     public long CategoryId { get; set; }
 }
