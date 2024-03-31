@@ -2,6 +2,7 @@
 using OneFit.Service.Exceptions;
 using OneFit.Service.DTOs.Categories;
 using OneFit.DataAccess.Repositories.Categories;
+using OneFit.Domain.Entities;
 
 namespace OneFit.Service.Services.Categories;
 
@@ -15,6 +16,7 @@ public class CategoryService : ICategoryService
         this.categoryRepository = categoryRepository;
         this.mapper = mapper;
     }
+
     public async Task<CategoryViewModel> CreateAsync(CategoryCreateModel categoryCreateModel)
     {
         var existCategory = (await categoryRepository
@@ -26,7 +28,8 @@ public class CategoryService : ICategoryService
 
         var createCategory = await categoryRepository
                                  .InsertAsync(this.mapper
-                                 .Map<Domain.Entities.Category>(categoryCreateModel));
+                                 .Map<Category>(categoryCreateModel));
+
         return this.mapper.Map<CategoryViewModel>(createCategory);
     }
 

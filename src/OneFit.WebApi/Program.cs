@@ -6,6 +6,9 @@ using OneFit.DataAccess.Repositories.Facilities;
 using OneFit.DataAccess.Repositories.StudioFacilities;
 using OneFit.DataAccess.Repositories.Studios;
 using OneFit.DataAccess.Repositories.Users;
+using OneFit.Service.Mappers;
+using OneFit.Service.Services.Categories;
+using OneFit.Service.Services.Studios;
 using OneFit.WebApi.Helpers;
 using OneFit.WebApi.Middlewares;
 
@@ -27,9 +30,14 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IFacilityRepository, FacilityRepository>();
 builder.Services.AddScoped<IStudioFacilityRepository, StudioFacilityRepository>();
 
+builder.Services.AddScoped<IStudioService, StudioService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddControllers(options
     => options.Conventions

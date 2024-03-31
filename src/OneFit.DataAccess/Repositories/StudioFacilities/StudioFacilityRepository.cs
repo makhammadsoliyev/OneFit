@@ -10,7 +10,7 @@ public class StudioFacilityRepository(AppDbContext context) : IStudioFacilityRep
     {
         using var connection = context.CreateConnection();
         var sql = """
-                DELETE StudioFacilities WHERE Id = @id;
+                DELETE "StudioFacilities" WHERE "Id" = @id;
                 """;
 
         return await connection.ExecuteAsync(sql, new { id }) > 0;
@@ -20,7 +20,7 @@ public class StudioFacilityRepository(AppDbContext context) : IStudioFacilityRep
     {
         using var connection = context.CreateConnection();
         var sql = """
-                INSERT INTO StudioFacilities (FacilityId, StudioId)
+                INSERT INTO "StudioFacilities" ("FacilityId", "StudioId")
                 VALUES (@FacilityId, @StudioId);
                 """;
 
@@ -31,7 +31,7 @@ public class StudioFacilityRepository(AppDbContext context) : IStudioFacilityRep
     {
         using var connection = context.CreateConnection();
         var sql = """
-                SELCT * FROM StudioFacilities;
+                SELECT * FROM "StudioFacilities";
                 """;
 
         return await connection.QueryAsync<StudioFacility>(sql);
@@ -41,7 +41,7 @@ public class StudioFacilityRepository(AppDbContext context) : IStudioFacilityRep
     {
         using var connection = context.CreateConnection();
         var sql = """
-                SELCT * FROM StudioFacilities WHERE id = @id;
+                SELECT * FROM "StudioFacilities" WHERE "Id" = @id;
                 """;
 
         return await connection.QuerySingleOrDefaultAsync<StudioFacility>(sql, new { id });
@@ -51,10 +51,10 @@ public class StudioFacilityRepository(AppDbContext context) : IStudioFacilityRep
     {
         using var connection = context.CreateConnection();
         var sql = """
-                UPDATE Categories
-                SET FacilityId = @FacilityId, 
-                    StudioId = @StudioId,
-                    UpdatedAt = current_timestamp
+                UPDATE "StudioFacilities"
+                SET "FacilityId" = @FacilityId, 
+                    "StudioId" = @StudioId,
+                    "UpdatedAt" = current_timestamp
                 """;
 
         return await connection.ExecuteAsync(sql, model) > 0;
