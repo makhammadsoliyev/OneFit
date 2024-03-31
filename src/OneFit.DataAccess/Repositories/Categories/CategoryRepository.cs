@@ -1,31 +1,61 @@
-﻿using OneFit.Domain.Entities;
+﻿using Dapper;
+using OneFit.DataAccess.Contexts;
+using OneFit.Domain.Entities;
 
 namespace OneFit.DataAccess.Repositories.Categories;
 
-public class CategoryRepository : ICategoryRepository
+public class CategoryRepository(AppDbContext context) : ICategoryRepository
 {
-    public Task<bool> DeleteAsync(long id)
+    public async Task<bool> DeleteAsync(long id)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                DELETE Categories WHERE Id = @id;
+                """;
+
+        return await connection.ExecuteAsync(sql, new { id }) > 0;
     }
 
-    public Task<Category> InsertAsync(Category model)
+    public async Task<Category> InsertAsync(Category model)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                INSERT INTO Categories (Name)
+                VALUES (@Name)
+                """;
+
+        return await connection.ExecuteScalarAsync<Category>(sql, model);
     }
 
-    public Task<IEnumerable<Category>> SelectAllAsync()
+    public async Task<IEnumerable<Category>> SelectAllAsync()
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                SELCT * FROM Categories;
+                """;
+
+        return await connection.QueryAsync<Category>(sql);
     }
 
-    public Task<Category> SelectByIdASync(long id)
+    public async Task<Category> SelectByIdASync(long id)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                SELCT * FROM Categories WHERE id = @id;
+                """;
+
+        return await connection.QuerySingleOrDefaultAsync<Category>(sql, new { id });
     }
 
-    public Task<bool> UpdateAsync(Category model)
+    public async Task<bool> UpdateAsync(Category model)
     {
-        throw new NotImplementedException();
+        using var connection = context.CreateConnection();
+        var sql = """
+                UPDATE Categories
+                SET Name = @Name,
+                    UpdatedAt = current_timestamp
+                """;
+
+        return await connection.ExecuteAsync(sql, model) > 0;
     }
 }
