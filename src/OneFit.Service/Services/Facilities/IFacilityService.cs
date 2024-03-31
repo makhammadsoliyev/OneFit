@@ -1,6 +1,6 @@
 using OneFit.Service.DTOs.Facilities;
 
-namespace OneFit.Service.Services.Facility;
+namespace OneFit.Service.Services.Facilities;
 
 public interface IFacilityService
 {
