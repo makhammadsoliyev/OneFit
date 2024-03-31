@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using OneFit.Domain.Entities;
-using OneFit.Service.DTOs;
 using OneFit.Service.DTOs.Categories;
 using OneFit.Service.DTOs.Enrollments;
 using OneFit.Service.DTOs.Facilities;
@@ -35,9 +34,7 @@ namespace OneFit.Service.Mappers
             CreateMap<StudioFacility, StudioFacilityViewModel>().ReverseMap();
 
             CreateMap<Enrollment, EnrollmentCreateModel>().ReverseMap();
-            CreateMap<Enrollment, EnrollmentUpdateModel>().ReverseMap();
             CreateMap<Enrollment, EnrollmentViewModel>().ReverseMap();
-
         }
     }
 }
