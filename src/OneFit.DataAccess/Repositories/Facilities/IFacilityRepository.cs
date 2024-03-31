@@ -1,4 +1,4 @@
-﻿using OneFit.Domain.Entities;
+using OneFit.Domain.Entities;
 
 namespace OneFit.DataAccess.Repositories.Facilities;
 
