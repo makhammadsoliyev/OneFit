@@ -1,5 +1,9 @@
 using OneFit.DataAccess.Configurations;
 using OneFit.DataAccess.Contexts;
+using OneFit.DataAccess.Repositories.Categories;
+using OneFit.DataAccess.Repositories.Facilities;
+using OneFit.DataAccess.Repositories.StudioFacilities;
+using OneFit.DataAccess.Repositories.Studios;
 using OneFit.DataAccess.Repositories.Users;
 using OneFit.WebApi.Middlewares;
 
@@ -16,6 +20,10 @@ builder.Services.Configure<DbSettings>(builder.Configuration.GetSection(nameof(D
 
 builder.Services.AddSingleton<AppDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IStudioRepository, StudioRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IFacilityRepository, FacilityRepository>();
+builder.Services.AddScoped<IStudioFacilityRepository, StudioFacilityRepository>();
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
