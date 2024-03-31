@@ -67,6 +67,8 @@ public class StudioService : IStudioService
         existStudio.CategoryId = model.CategoryId;
         existStudio.Description = model.Description;
 
-        return this.mapper.Map<StudioViewModel>(await repository.UpdateAsync(existStudio));
+        await repository.UpdateAsync(existStudio
+
+        return this.mapper.Map<StudioViewModel>(existStudio);
     }
 }
