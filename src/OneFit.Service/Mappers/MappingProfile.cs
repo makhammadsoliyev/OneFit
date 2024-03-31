@@ -35,9 +35,7 @@ namespace OneFit.Service.Mappers
             CreateMap<StudioFacility, StudioFacilityViewModel>().ReverseMap();
 
             CreateMap<Enrollment, EnrollmentCreateModel>().ReverseMap();
-            CreateMap<Enrollment, EnrollmentUpdateModel>().ReverseMap();
             CreateMap<Enrollment, EnrollmentViewModel>().ReverseMap();
-
         }
     }
 }
