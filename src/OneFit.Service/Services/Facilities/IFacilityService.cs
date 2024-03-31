@@ -35,4 +35,5 @@ public interface IFacilityService
     /// </summary>
     /// <returns></returns>
     public Task<IEnumerable<FacilityViewModel>> GetAllAsync();
+
 }
