@@ -1,6 +1,6 @@
 ﻿using OneFit.Service.DTOs.Enrollments;
 
-namespace OneFit.Service.Interfaces.Enrollments
+namespace OneFit.Service.Services.Enrollments
 {
     public interface IEnrollmentService
     {
