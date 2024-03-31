@@ -1,6 +1,7 @@
 using OneFit.DataAccess.Configurations;
 using OneFit.DataAccess.Contexts;
 using OneFit.DataAccess.Repositories.Users;
+using OneFit.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,10 @@ builder.Services.Configure<DbSettings>(builder.Configuration.GetSection(nameof(D
 
 builder.Services.AddSingleton<AppDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -36,5 +41,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseExceptionHandler();
 
 app.Run();

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OneFit.DataAccess\OneFit.DataAccess.csproj" />
+    <ProjectReference Include="..\OneFit.Service\OneFit.Service.csproj" />
   </ItemGroup>
 
 </Project>
