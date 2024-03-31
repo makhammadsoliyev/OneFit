@@ -37,5 +37,5 @@ public interface IStudioService
     /// Get list of exist Studios
     /// </summary>
     /// <returns></returns>
-    public Task<StudioViewModel> GetAllAsync();
+    public Task<IEnumerable<StudioViewModel>> GetAllAsync();
 }
