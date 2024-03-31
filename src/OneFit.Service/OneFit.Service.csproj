@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OneFit.DataAccess\OneFit.DataAccess.csproj" />
     <ProjectReference Include="..\OneFit.Domain\OneFit.Domain.csproj" />
   </ItemGroup>
 
