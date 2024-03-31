@@ -10,7 +10,7 @@ public class FacilityRepository(AppDbContext context) : IFacilityRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-                DELETE Facilities WHERE Id = @id;
+                DELETE "Facilities" WHERE "Id" = @id;
                 """;
 
         return await connection.ExecuteAsync(sql, new { id }) > 0;
@@ -20,7 +20,7 @@ public class FacilityRepository(AppDbContext context) : IFacilityRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-                INSERT INTO Facilities (Name)
+                INSERT INTO "Facilities" ("Name")
                 VALUES (@Name)
                 """;
 
@@ -31,7 +31,7 @@ public class FacilityRepository(AppDbContext context) : IFacilityRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-                SELCT * FROM Facilities;
+                SELECT * FROM "Facilities";
                 """;
 
         return await connection.QueryAsync<Facility>(sql);
@@ -41,7 +41,7 @@ public class FacilityRepository(AppDbContext context) : IFacilityRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-                SELCT * FROM Facilities WHERE id = @id;
+                SELECT * FROM "Facilities" WHERE "Id" = @id;
                 """;
 
         return await connection.QuerySingleOrDefaultAsync<Facility>(sql, new { id });
@@ -51,10 +51,10 @@ public class FacilityRepository(AppDbContext context) : IFacilityRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-                UPDATE Facilities
-                SET Name = @Name,
-                    CategoryId = @CategoryId,
-                    UpdatedAt = current_timestamp
+                UPDATE "Facilities"
+                SET "Name" = @Name,
+                    "CategoryId" = @CategoryId,
+                    "UpdatedAt" = current_timestamp
                 """;
 
         return await connection.ExecuteAsync(sql, model) > 0;

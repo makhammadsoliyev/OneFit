@@ -66,7 +66,7 @@ namespace OneFit.WebApi.Controllers
             });
         }
 
-        // DELETE api/<CAtegoriesController>/
+        // DELETE api/<CategoriesController>/
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {

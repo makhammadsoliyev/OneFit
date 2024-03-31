@@ -49,7 +49,7 @@ public class AppDbContext(IOptions<DbSettings> dbSettings)
         {
             var sql = """
                 CREATE TABLE IF NOT EXISTS "Users" (
-                "Id" bigint PRIMARY KEY,
+                "Id" bigserial PRIMARY KEY,
                 "FirstName" varchar,
                 "LastrName" varchar,
                 "Phone" varchar,
@@ -64,7 +64,7 @@ public class AppDbContext(IOptions<DbSettings> dbSettings)
         {
             var sql = """
                 CREATE TABLE IF NOT EXISTS "Categories" (
-                "Id" bigint PRIMARY KEY,
+                "Id" bigserial PRIMARY KEY,
                 "Name" varchar,
                 "CreatedAt" timestamp default current_timestamp,
                 "UpdatedAt" timestamp default null
@@ -78,7 +78,7 @@ public class AppDbContext(IOptions<DbSettings> dbSettings)
         {
             var sql = """
                 CREATE TABLE IF NOT EXISTS "Studios" (
-                "Id" bigint PRIMARY KEY,
+                "Id" bigserial PRIMARY KEY,
                 "Name" varchar,
                 "Description" varchar,
                 "Address" varchar,
@@ -96,7 +96,7 @@ public class AppDbContext(IOptions<DbSettings> dbSettings)
         {
             var sql = """
                 CREATE TABLE IF NOT EXISTS "Facilities" (
-                "Id" bigint PRIMARY KEY,
+                "Id" bigserial PRIMARY KEY,
                 "Name" varchar,
                 "CreatedAt" timestamp default current_timestamp,
                 "UpdatedAt" timestamp default null
@@ -110,7 +110,7 @@ public class AppDbContext(IOptions<DbSettings> dbSettings)
         {
             var sql = """
                 CREATE TABLE IF NOT EXISTS "StudioFacilities" (
-                "Id" bigint PRIMARY KEY,
+                "Id" bigserial PRIMARY KEY,
                 "StudioId" bigint,
                 "FacilityId" bigint,
                 "CreatedAt" timestamp default current_timestamp,
@@ -125,7 +125,7 @@ public class AppDbContext(IOptions<DbSettings> dbSettings)
         {
             var sql = """
                 CREATE TABLE IF NOT EXISTS "Enrollments" (
-                "Id" bigint PRIMARY KEY,
+                "Id" bigserial PRIMARY KEY,
                 "StudioId" bigint,
                 "UserId" bigint,
                 "CreatedAt" timestamp default current_timestamp,
