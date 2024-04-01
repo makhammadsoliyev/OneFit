@@ -3,71 +3,69 @@ using OneFit.DataAccess.Repositories.StudioFacilities;
 using OneFit.Domain.Entities;
 using OneFit.Service.DTOs.StudioFacilities;
 using OneFit.Service.Exceptions;
+using OneFit.Service.Services.Facilities;
+using OneFit.Service.Services.Studios;
 
 namespace OneFit.Service.Services.StudioFacilities;
 
-public class StudioFacilityService : IStudioFacilityService
+public class StudioFacilityService(IMapper mapper,
+                                   IStudioService studioService,
+                                   IFacilityService facilityService,
+                                   IStudioFacilityRepository repository) : IStudioFacilityService
 {
-    private readonly IStudioFacilityRepository _repository;
-    private readonly IMapper _mapper;
+    public async Task<StudioFacilityViewModel> CreateAsync(StudioFacilityCreateModel studioFacility)
+    {
+        await studioService.GetByIdAsync(studioFacility.StudioId);
+        await facilityService.GetByIdAsync(studioFacility.FacilityId);
 
-    public StudioFacilityService(IStudioFacilityRepository repository, IMapper mapper)
-    {
-        _repository = repository;
-        _mapper = mapper;
-    }
-    
-    public async Task<StudioFacilityViewModel> CreateAsync(StudioFacilityCreateModel studioFacilityCreateModel)
-    {
-        var existStudioFacilityViewModel = (await _repository.SelectAllAsync())
+        var existStudioFacility = (await repository.SelectAllAsync())
                                             .FirstOrDefault(f => 
-                                            f.FacilityId == studioFacilityCreateModel.FacilityId &&
-                                            f.StudioId == studioFacilityCreateModel.StudioId);
-        if (existStudioFacilityViewModel is not null)
+                                            f.FacilityId == studioFacility.FacilityId &&
+                                            f.StudioId == studioFacility.StudioId);
+        if (existStudioFacility is not null)
             throw new CustomException(403, "StudioFacility already exist");
-        var createStudioFacility = await _repository
-                                  .InsertAsync(this._mapper
-                                  .Map<StudioFacility>(studioFacilityCreateModel));
 
-        return this._mapper.Map<StudioFacilityViewModel>(createStudioFacility);
+        var createdStudioFacility = await repository
+                                  .InsertAsync(mapper.Map<StudioFacility>(studioFacility));
+
+        return mapper.Map<StudioFacilityViewModel>(createdStudioFacility);
     }
 
-    public async Task<StudioFacilityViewModel> UpdateAsync(long id, StudioFacilityUpdateModel studioFacilityUpdateModel)
+    public async Task<StudioFacilityViewModel> UpdateAsync(long id, StudioFacilityUpdateModel studioFacility)
     {
-        var existStudioFacility = (await _repository
-                                      .SelectAllAsync())
-                                  .FirstOrDefault(s => s.Id == id)
-                                  ?? throw new CustomException(404, "StudioFacility not found");
-        existStudioFacility.FacilityId = studioFacilityUpdateModel.FacilityId;
-        existStudioFacility.StudioId = studioFacilityUpdateModel.StudioId;
-        existStudioFacility.UpdatedAt = DateTime.UtcNow;
+        await studioService.GetByIdAsync(studioFacility.StudioId);
+        await facilityService.GetByIdAsync(studioFacility.FacilityId);
 
-        return this._mapper.Map<StudioFacilityViewModel>(await _repository
-                           .UpdateAsync(existStudioFacility));
+        var existStudioFacility = await repository.SelectByIdAsync(id)
+            ?? throw new CustomException(404, "StudioFacility not found");
+
+        existStudioFacility.UpdatedAt = DateTime.UtcNow;
+        existStudioFacility.StudioId = studioFacility.StudioId;
+        existStudioFacility.FacilityId = studioFacility.FacilityId;
+
+        await repository.UpdateAsync(existStudioFacility);
+
+        return mapper.Map<StudioFacilityViewModel>(existStudioFacility);
     }
 
     public async Task<bool> DeleteAsync(long id)
     {
-        var existStudioFacility = (await _repository
-                                  .SelectAllAsync())
-                                  .FirstOrDefault(s => s.Id == id)
-                                  ?? throw new CustomException(404, "StudioFacility not found");
+        _ = await repository.SelectByIdAsync(id)
+            ?? throw new CustomException(404, "StudioFacility not found");
 
-        return await _repository.DeleteAsync(id);
+        return await repository.DeleteAsync(id);
     }
 
     public async Task<StudioFacilityViewModel> GetByIdAsync(long id)
     {
-        var existStudioFacility = (await _repository
-                                  .SelectAllAsync())
-                                  .FirstOrDefault(s => s.Id == id)
-                                  ?? throw new CustomException(404, "StudioFacility not found");
+        var existStudioFacility = await repository.SelectByIdAsync(id)
+            ?? throw new CustomException(404, "StudioFacility not found");
 
-        return this._mapper.Map<StudioFacilityViewModel>(existStudioFacility);
+        return mapper.Map<StudioFacilityViewModel>(existStudioFacility);
     }
 
     public async Task<IEnumerable<StudioFacilityViewModel>> GetAllAsync()
     {
-        return this._mapper.Map<IEnumerable<StudioFacilityViewModel>>(await _repository.SelectAllAsync());
+        return mapper.Map<IEnumerable<StudioFacilityViewModel>>(await repository.SelectAllAsync());
     }
 }

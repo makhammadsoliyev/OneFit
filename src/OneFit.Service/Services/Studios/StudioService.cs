@@ -2,73 +2,65 @@
 using OneFit.Service.Exceptions;
 using OneFit.Service.DTOs.Studios;
 using OneFit.DataAccess.Repositories.Studios;
+using OneFit.Service.Services.Categories;
+using OneFit.Domain.Entities;
 
 namespace OneFit.Service.Services.Studios;
 
-public class StudioService : IStudioService
+public class StudioService(IStudioRepository repository, IMapper mapper, ICategoryService categoryService) : IStudioService
 {
-    private readonly IStudioRepository repository;
-    private readonly IMapper mapper;
+    public async Task<StudioViewModel> CreateAsync(StudioCreateModel studio)
+    {
+        await categoryService.GetByIdAsync(studio.CategoryId);
 
-    public StudioService(IStudioRepository repository, IMapper mapper)
-    {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
-    public async Task<StudioViewModel> CreateAsync(StudioCreateModel model)
-    {
         var existStudio = (await repository.SelectAllAsync())
-                          .FirstOrDefault(s => s.Name == model.Name);
+                          .FirstOrDefault(s => s.Name == studio.Name);
 
         if (existStudio is not null)
             throw new CustomException(403, "Studio already exist");
 
-        var createStudio = await repository.InsertAsync(this.mapper.Map<Domain.Entities.Studio>(model));
+        var createdStudio = await repository.InsertAsync(mapper.Map<Studio>(studio));
 
-        return this.mapper.Map<StudioViewModel>(createStudio);
+        return mapper.Map<StudioViewModel>(createdStudio);
     }
 
     public async Task<bool> DeleteAsync(long id)
     {
-        var existStudio = (await repository
-                                .SelectAllAsync())
-                                .FirstOrDefault(s => s.Id == id)
-                                ?? throw new CustomException(404, "Studio is not found");
+        _ = await repository.SelectByIdAsync(id)
+            ?? throw new CustomException(404, "Studio is not found");
 
         return await repository.DeleteAsync(id);
     }
 
     public async Task<IEnumerable<StudioViewModel>> GetAllAsync()
     {
-        return this.mapper.Map<IEnumerable<StudioViewModel>>(await repository.SelectAllAsync());
+        return mapper.Map<IEnumerable<StudioViewModel>>(await repository.SelectAllAsync());
     }
 
     public async Task<StudioViewModel> GetByIdAsync(long id)
     {
-        var existStudio = (await repository
-                               .SelectAllAsync())
-                               .FirstOrDefault(s => s.Id == id)
-                               ?? throw new CustomException(404, "Studio is not found");
+        var existStudio = await repository.SelectByIdAsync(id)
+            ?? throw new CustomException(404, "Studio is not found");
 
-        return this.mapper.Map<StudioViewModel>(existStudio);
+        return mapper.Map<StudioViewModel>(existStudio);
     }
 
-    public async Task<StudioViewModel> UpdateAsync(long id, StudioUpdateModel model)
+    public async Task<StudioViewModel> UpdateAsync(long id, StudioUpdateModel studio)
     {
-        var existStudio = (await repository
-                               .SelectAllAsync())
-                               .FirstOrDefault(s => s.Id == id)
-                               ?? throw new CustomException(404, "Studio is not found");
+        await categoryService.GetByIdAsync(studio.CategoryId);
 
-        existStudio.Name = model.Name;
-        existStudio.Type = model.Type;
-        existStudio.Address = model.Address;
-        existStudio.UpdatedAt = DateTime.Now;
-        existStudio.CategoryId = model.CategoryId;
-        existStudio.Description = model.Description;
+        var existStudio = await repository.SelectByIdAsync(id)
+            ?? throw new CustomException(404, "Studio is not found");
+
+        existStudio.Name = studio.Name;
+        existStudio.Type = studio.Type;
+        existStudio.Address = studio.Address;
+        existStudio.UpdatedAt = DateTime.UtcNow;
+        existStudio.CategoryId = studio.CategoryId;
+        existStudio.Description = studio.Description;
 
         await repository.UpdateAsync(existStudio);
 
-        return this.mapper.Map<StudioViewModel>(existStudio);
+        return mapper.Map<StudioViewModel>(existStudio);
     }
 }

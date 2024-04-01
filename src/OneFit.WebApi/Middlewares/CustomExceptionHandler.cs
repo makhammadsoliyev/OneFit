@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using OneFit.Service.Exceptions;
+using System.Net;
 
 namespace OneFit.WebApi.Middlewares;
 
@@ -12,6 +13,8 @@ public sealed class CustomExceptionHandler : IExceptionHandler
     {
         if (exception is not CustomException customException)
             return false;
+
+        httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
         var problemDetails = new ProblemDetails()
         {

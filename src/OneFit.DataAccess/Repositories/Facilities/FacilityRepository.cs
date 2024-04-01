@@ -10,21 +10,24 @@ public class FacilityRepository(AppDbContext context) : IFacilityRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-                DELETE "Facilities" WHERE "Id" = @id;
+                DELETE FROM "Facilities" WHERE "Id" = @id;
                 """;
 
         return await connection.ExecuteAsync(sql, new { id }) > 0;
     }
 
-    public async Task<Facility> InsertAsync(Facility model)
+    public async Task<Facility> InsertAsync(Facility facility)
     {
         using var connection = context.CreateConnection();
         var sql = """
                 INSERT INTO "Facilities" ("Name")
                 VALUES (@Name)
+                    RETURNING * ;
                 """;
 
-        return await connection.ExecuteScalarAsync<Facility>(sql, model);
+        await connection.ExecuteScalarAsync(sql, facility);
+
+        return (await SelectAllAsync()).LastOrDefault();
     }
 
     public async Task<IEnumerable<Facility>> SelectAllAsync()
@@ -37,7 +40,7 @@ public class FacilityRepository(AppDbContext context) : IFacilityRepository
         return await connection.QueryAsync<Facility>(sql);
     }
 
-    public async Task<Facility> SelectByIdASync(long id)
+    public async Task<Facility> SelectByIdAsync(long id)
     {
         using var connection = context.CreateConnection();
         var sql = """
@@ -53,7 +56,6 @@ public class FacilityRepository(AppDbContext context) : IFacilityRepository
         var sql = """
                 UPDATE "Facilities"
                 SET "Name" = @Name,
-                    "CategoryId" = @CategoryId,
                     "UpdatedAt" = current_timestamp
                 """;
 

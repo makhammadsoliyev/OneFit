@@ -1,10 +1,9 @@
 ﻿using OneFit.Domain.Commons;
 
-namespace OneFit.Domain.Entities
+namespace OneFit.Domain.Entities;
+
+public class Enrollment : Auditable
 {
-    public class Enrollment : Auditable
-    {
-        public long UserId { get; set; }
-        public long StudioId { get; set; }
-    }
+    public long UserId { get; set; }
+    public long StudioId { get; set; }
 }

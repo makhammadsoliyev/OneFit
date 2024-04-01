@@ -10,21 +10,24 @@ public class UserRepository(AppDbContext context) : IUserRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-                DELETE "Users" WHERE "Id" = @id;
+                DELETE FROM "Users" WHERE "Id" = @id;
                 """;
 
         return await connection.ExecuteAsync(sql, new { id }) > 0;
     }
 
-    public async Task<User> InsertAsync(User model)
+    public async Task<User> InsertAsync(User user)
     {
         using var connection = context.CreateConnection();
         var sql = """
                 INSERT INTO "Users" ("FirstName", "LastName", "Phone", "Password")
-                VALUES (@Title, @FirstName, @LastName, @Phone, @Password)
+                VALUES (@FirstName, @LastName, @Phone, @Password)
+                    RETURNING * ;
                 """;
 
-        return await connection.ExecuteScalarAsync<User>(sql, model);
+        await connection.ExecuteScalarAsync(sql, user);
+
+        return (await SelectAllAsync()).LastOrDefault();
     }
 
     public async Task<IEnumerable<User>> SelectAllAsync()
@@ -55,8 +58,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
                 SET "FirstName" = @FirstName,
                     "LastName" = @LastName,
                     "Phone" = @Phone,
-                    "Password" = @Password,
-                    "UpdatedAt" = current_timestamp
+                    "Password" = @Password;
                 """;
 
         return await connection.ExecuteAsync(sql, model) > 0;

@@ -10,21 +10,24 @@ public class CategoryRepository(AppDbContext context) : ICategoryRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-                DELETE "Categories" WHERE "Id" = @id;
+                DELETE FROM "Categories" WHERE "Id" = @id;
                 """;
 
         return await connection.ExecuteAsync(sql, new { id }) > 0;
     }
 
-    public async Task<Category> InsertAsync(Category model)
+    public async Task<Category> InsertAsync(Category category)
     {
         using var connection = context.CreateConnection();
         var sql = """
                 INSERT INTO "Categories" ("Name")
                 VALUES (@Name)
+                    RETURNING * ;
                 """;
 
-        return await connection.ExecuteScalarAsync<Category>(sql, model);
+        await connection.ExecuteScalarAsync(sql, category);
+
+        return (await SelectAllAsync()).LastOrDefault();
     }
 
     public async Task<IEnumerable<Category>> SelectAllAsync()
@@ -37,7 +40,7 @@ public class CategoryRepository(AppDbContext context) : ICategoryRepository
         return await connection.QueryAsync<Category>(sql);
     }
 
-    public async Task<Category> SelectByIdASync(long id)
+    public async Task<Category> SelectByIdAsync(long id)
     {
         using var connection = context.CreateConnection();
         var sql = """
@@ -53,7 +56,7 @@ public class CategoryRepository(AppDbContext context) : ICategoryRepository
         var sql = """
                 UPDATE "Categories"
                 SET "Name" = @Name,
-                    "UpdatedAt" = current_timestamp
+                    "UpdatedAt" = current_timestamp;
                 """;
 
         return await connection.ExecuteAsync(sql, model) > 0;

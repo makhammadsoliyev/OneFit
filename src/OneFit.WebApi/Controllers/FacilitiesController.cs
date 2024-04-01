@@ -7,24 +7,17 @@ namespace OneFit.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class FacilitiesController : ControllerBase
+public class FacilitiesController(IFacilityService facilityService) : ControllerBase
 {
-    private readonly IFacilityService _facilityService;
-
-    public FacilitiesController(IFacilityService facilityService)
-    {
-        this._facilityService = facilityService;
-    }
-
     // GET: api/<FacilityController>
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {
         return Ok(new Response()
         {
-            StatusCode = 200,
             Message = "OK",
-            Data = await _facilityService.GetAllAsync()
+            StatusCode = 200,
+            Data = await facilityService.GetAllAsync()
         });
     }
 
@@ -34,43 +27,45 @@ public class FacilitiesController : ControllerBase
     {
         return Ok(new Response()
         {
-            StatusCode = 200,
             Message = "OK",
-            Data = await _facilityService.GetByIdAsync(id)
+            StatusCode = 200,
+            Data = await facilityService.GetByIdAsync(id)
         });
     }
 
     // POST api/<FacilityController>
     [HttpPost]
-    public async Task<IActionResult> PostAsync([FromBody] FacilityCreateModel facilityCreation)
+    public async Task<IActionResult> PostAsync([FromBody] FacilityCreateModel facility)
     {
         return Ok(new Response()
         {
-            StatusCode = 200,
             Message = "OK",
-            Data = await _facilityService.CreateAsync(facilityCreation)
+            StatusCode = 200,
+            Data = await facilityService.CreateAsync(facility)
         });
     }
+
     //Put api/<FacilityController>
     [HttpPut("{id:long}")]
-    public async Task<IActionResult> PutAsync(long id,FacilityUpdateModel facilityUpdateModel)
+    public async Task<IActionResult> PutAsync(long id, [FromBody] FacilityUpdateModel facility)
     {
         return Ok(new Response()
         {
-            StatusCode = 200,
             Message = "OK",
-            Data = await _facilityService.UpdateAsync(id,facilityUpdateModel)
+            StatusCode = 200,
+            Data = await facilityService.UpdateAsync(id, facility)
         });
     }
+
     //Delete api/<FacilityController>
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> DeleteAsync(long id)
     {
         return Ok(new Response()
         {
-            StatusCode = 200,
             Message = "OK",
-            Data = await _facilityService.DeleteAsync(id)
+            StatusCode = 200,
+            Data = await facilityService.DeleteAsync(id)
         });
     }
  }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace OneFit.WebApi.Middlewares;
 
@@ -9,6 +10,8 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
                                                 Exception exception,
                                                 CancellationToken cancellationToken)
     {
+        httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
         var problemDetails = new ProblemDetails()
         {
             Status = StatusCodes.Status500InternalServerError,

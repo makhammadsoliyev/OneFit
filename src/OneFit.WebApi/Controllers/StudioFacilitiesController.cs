@@ -3,77 +3,69 @@ using OneFit.Service.DTOs.StudioFacilities;
 using OneFit.Service.Services.StudioFacilities;
 using OneFit.WebApi.Models;
 
-namespace OneFit.WebApi.Controllers
+namespace OneFit.WebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class StudioFacilitiesController(IStudioFacilityService studioFacilityService) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class StudioFacilitiesController : ControllerBase
+    //Get:api/<StudioFacilitiesController>
+    [HttpGet]
+    public async Task<IActionResult> GetAllAsync()
     {
-        private readonly IStudioFacilityService _studioFacilityService;
-
-        public StudioFacilitiesController(IStudioFacilityService studioFacilityService)
+        return Ok(new Response()
         {
-            _studioFacilityService = studioFacilityService;
-        }
+            Message = "OK",
+            StatusCode = 200,
+            Data = await studioFacilityService.GetAllAsync()
+        });
+    }
 
-        //Get:api/<StudioFacilitiesController>
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+    //Get api/<StudioFacilitiesController>
+    [HttpGet("{id:long}")]
+    public async Task<IActionResult> GetAsync(long id)
+    {
+        return Ok(new Response()
         {
-            return Ok(new Response()
-            {
-                StatusCode = 200,
-                Message = "OK",
-                Data = await _studioFacilityService.GetAllAsync()
-            });
-        }
+            Message = "OK",
+            StatusCode = 200,
+            Data = await studioFacilityService.GetByIdAsync(id)
+        });
+    }
 
-        //Get api/<StudioFacilitiesController>
-        [HttpGet("{id:long}")]
-        public async Task<IActionResult> GetAsync(long id)
+    //Post api/<StudioFacilitiesController>
+    [HttpPost]
+    public async Task<IActionResult> PostAsync([FromBody] StudioFacilityCreateModel studioFacility)
+    {
+        return Ok(new Response()
         {
-            return Ok(new Response()
-            {
-                StatusCode = 200,
-                Message = "OK",
-                Data = await _studioFacilityService.GetByIdAsync(id)
-            });
-        }
+            Message = "OK",
+            StatusCode = 200,
+            Data = await studioFacilityService.CreateAsync(studioFacility)
+        });
+    }
 
-        //Post api/<StudioFacilitiesController>
-        [HttpPost]
-        public async Task<IActionResult> PostAsync(StudioFacilityCreateModel studioCreateModel)
+    //Put api/<StudioFacilitiesController>
+    [HttpPut("{id:long}")]
+    public async Task<IActionResult> PutAsync(long id, [FromBody] StudioFacilityUpdateModel studioFacility)
+    {
+        return Ok(new Response()
         {
-            return Ok(new Response()
-            {
-                StatusCode = 200,
-                Message = "OK",
-                Data = await _studioFacilityService.CreateAsync(studioCreateModel)
-            });
-        }
+            Message = "OK",
+            StatusCode = 200,
+            Data = await studioFacilityService.UpdateAsync(id, studioFacility)
+        });
+    }
 
-        //Put api/<StudioFacilitiesController>
-        [HttpPut("{id:long}")]
-        public async Task<IActionResult> PutAsync(long id, StudioFacilityUpdateModel studioFacilityUpdateModel)
+    //Delete api/<StudioFacilitiesController>
+    [HttpDelete("{id:long}")]
+    public async Task<IActionResult> DeleteAsync(long id)
+    {
+        return Ok(new Response()
         {
-            return Ok(new Response()
-            {
-                StatusCode = 200,
-                Message = "OK",
-                Data = await _studioFacilityService.UpdateAsync(id, studioFacilityUpdateModel)
-            });
-        }
-
-        //Delete api/<StudioFacilitiesController>
-        [HttpDelete("{id:long}")]
-        public async Task<IActionResult> DeleteAsync(long id)
-        {
-            return Ok(new Response()
-            {
-                StatusCode = 200,
-                Message = "OK",
-                Data = await _studioFacilityService.DeleteAsync(id)
-            });
-        }
+            Message = "OK",
+            StatusCode = 200,
+            Data = await studioFacilityService.DeleteAsync(id)
+        });
     }
 }

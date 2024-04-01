@@ -39,11 +39,11 @@ public class AppDbContext(IOptions<DbSettings> dbSettings)
     {
         using var connection = CreateConnection();
         await _initUsers();
-        await _initCategories();
         await _initStudios();
+        await _initCategories();
         await _initFacilities();
-        await _initStudioFacilities();
         await _initEnrollments();
+        await _initStudioFacilities();
 
         async Task _initUsers()
         {
@@ -51,9 +51,11 @@ public class AppDbContext(IOptions<DbSettings> dbSettings)
                 CREATE TABLE IF NOT EXISTS "Users" (
                 "Id" bigserial PRIMARY KEY,
                 "FirstName" varchar,
-                "LastrName" varchar,
+                "LastName" varchar,
                 "Phone" varchar,
-                "Password" varchar
+                "Password" varchar,
+                "CreatedAt" timestamp default current_timestamp,
+                "UpdatedAt" timestamp default null
                 );
                 """;
 
