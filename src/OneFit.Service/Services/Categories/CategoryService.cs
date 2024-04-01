@@ -6,17 +6,8 @@ using OneFit.Domain.Entities;
 
 namespace OneFit.Service.Services.Categories;
 
-public class CategoryService : ICategoryService
+public class CategoryService(ICategoryRepository categoryRepository, IMapper mapper) : ICategoryService
 {
-    private readonly ICategoryRepository categoryRepository;
-    private readonly IMapper mapper;
-
-    public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
-    {
-        this.categoryRepository = categoryRepository;
-        this.mapper = mapper;
-    }
-
     public async Task<CategoryViewModel> CreateAsync(CategoryCreateModel categoryCreateModel)
     {
         var existCategory = (await categoryRepository
@@ -27,10 +18,10 @@ public class CategoryService : ICategoryService
             throw new CustomException(403, "Category already exist");
 
         var createCategory = await categoryRepository
-                                 .InsertAsync(this.mapper
+                                 .InsertAsync(mapper
                                  .Map<Category>(categoryCreateModel));
 
-        return this.mapper.Map<CategoryViewModel>(createCategory);
+        return mapper.Map<CategoryViewModel>(createCategory);
     }
 
     public async Task<bool> DeleteAsync(long id)
@@ -45,7 +36,7 @@ public class CategoryService : ICategoryService
 
     public async Task<IEnumerable<CategoryViewModel>> GetAllAsync()
     {
-        return this.mapper.Map<IEnumerable<CategoryViewModel>>(await categoryRepository.SelectAllAsync());
+        return mapper.Map<IEnumerable<CategoryViewModel>>(await categoryRepository.SelectAllAsync());
     }
 
     public async Task<CategoryViewModel> GetByIdAsync(long id)
@@ -55,7 +46,7 @@ public class CategoryService : ICategoryService
                                   .FirstOrDefault(c => c.Id == id)
                                   ?? throw new CustomException(404, "Category is not found");
 
-        return this.mapper.Map<CategoryViewModel>(existCategory);
+        return mapper.Map<CategoryViewModel>(existCategory);
     }
 
     public async Task<CategoryViewModel> UpdateAsync(long id, CategoryUpdateModel categoryUpdateModel)
@@ -70,6 +61,6 @@ public class CategoryService : ICategoryService
 
         await categoryRepository.UpdateAsync(existCategory);
         
-        return this.mapper.Map<CategoryViewModel>(existCategory);
+        return mapper.Map<CategoryViewModel>(existCategory);
     }
 }
