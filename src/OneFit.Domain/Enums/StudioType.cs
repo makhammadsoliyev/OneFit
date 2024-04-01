@@ -1,6 +1,6 @@
 ﻿namespace OneFit.Domain.Enums;
 
-public enum StudioType
+public enum Type
 {
     ForMen,
     ForWomen,

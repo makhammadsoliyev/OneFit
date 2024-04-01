@@ -10,21 +10,24 @@ public class StudioRepository(AppDbContext context) : IStudioRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-                DELETE "Studios" WHERE "Id" = @id;
+                DELETE FROM "Studios" WHERE "Id" = @id;
                 """;
 
         return await connection.ExecuteAsync(sql, new { id }) > 0;
     }
 
-    public async Task<Studio> InsertAsync(Studio model)
+    public async Task<Studio> InsertAsync(Studio studio)
     {
         using var connection = context.CreateConnection();
         var sql = """
-                INSERT INTO "Studios" ("Name", "Description", "Address", "StudioType", "CategoryId")
-                VALUES (@Name, @Description, @Address, @StudioType, @CategoryId)
+                INSERT INTO "Studios" ("Name", "Description", "Address", "Type", "CategoryId")
+                VALUES (@Name, @Description, @Address, @Type, @CategoryId)
+                    RETURNING * ;
                 """;
 
-        return await connection.ExecuteScalarAsync<Studio>(sql, model);
+        await connection.ExecuteScalarAsync(sql, studio);
+
+        return (await SelectAllAsync()).LastOrDefault();
     }
 
     public async Task<IEnumerable<Studio>> SelectAllAsync()
@@ -37,7 +40,7 @@ public class StudioRepository(AppDbContext context) : IStudioRepository
         return await connection.QueryAsync<Studio>(sql);
     }
 
-    public async Task<Studio> SelectByIdASync(long id)
+    public async Task<Studio> SelectByIdAsync(long id)
     {
         using var connection = context.CreateConnection();
         var sql = """
@@ -55,9 +58,9 @@ public class StudioRepository(AppDbContext context) : IStudioRepository
                 SET "Name" = @Name,
                     "Description" = @Description,
                     "Address" = @Address,
-                    "StudioType" = @StudioType,
+                    "Type" = @Type,
                     "CategoryId" = @CategoryId,
-                    "UpdatedAt" = current_timestamp
+                    "UpdatedAt" = current_timestamp;
                 """;
 
         return await connection.ExecuteAsync(sql, model) > 0;

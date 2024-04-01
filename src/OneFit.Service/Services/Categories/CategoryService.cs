@@ -1,35 +1,34 @@
 ﻿using AutoMapper;
-using OneFit.Service.Exceptions;
-using OneFit.Service.DTOs.Categories;
 using OneFit.DataAccess.Repositories.Categories;
 using OneFit.Domain.Entities;
+using OneFit.Service.DTOs.Categories;
+using OneFit.Service.Exceptions;
 
 namespace OneFit.Service.Services.Categories;
 
-public class CategoryService(ICategoryRepository categoryRepository, IMapper mapper) : ICategoryService
+public class CategoryService(IMapper mapper,
+                             ICategoryRepository categoryRepository) : ICategoryService
 {
-    public async Task<CategoryViewModel> CreateAsync(CategoryCreateModel categoryCreateModel)
+    public async Task<CategoryViewModel> CreateAsync(CategoryCreateModel category)
     {
         var existCategory = (await categoryRepository
-                    .SelectAllAsync())
-                    .FirstOrDefault(c => c.Name == categoryCreateModel.Name);
+                                .SelectAllAsync())
+                                .FirstOrDefault(c => c.Name == category.Name);
 
         if (existCategory is not null)
             throw new CustomException(403, "Category already exist");
 
-        var createCategory = await categoryRepository
+        var createdCategory = await categoryRepository
                                  .InsertAsync(mapper
-                                 .Map<Category>(categoryCreateModel));
+                                 .Map<Category>(category));
 
-        return mapper.Map<CategoryViewModel>(createCategory);
+        return mapper.Map<CategoryViewModel>(createdCategory);
     }
 
     public async Task<bool> DeleteAsync(long id)
     {
-        var existCategory = (await categoryRepository
-                                 .SelectAllAsync())
-                                 .FirstOrDefault(c => c.Id == id)
-                                 ?? throw new CustomException(404, "Category is not found");
+        _ = await categoryRepository.SelectByIdAsync(id)
+            ?? throw new CustomException(404, "Category is not found");
 
         return await categoryRepository.DeleteAsync(id);
     }
@@ -41,22 +40,18 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
 
     public async Task<CategoryViewModel> GetByIdAsync(long id)
     {
-        var existCategory = (await categoryRepository
-                                  .SelectAllAsync())
-                                  .FirstOrDefault(c => c.Id == id)
-                                  ?? throw new CustomException(404, "Category is not found");
+        var existCategory = await categoryRepository.SelectByIdAsync(id)
+            ?? throw new CustomException(404, "Category is not found");
 
         return mapper.Map<CategoryViewModel>(existCategory);
     }
 
-    public async Task<CategoryViewModel> UpdateAsync(long id, CategoryUpdateModel categoryUpdateModel)
+    public async Task<CategoryViewModel> UpdateAsync(long id, CategoryUpdateModel category)
     {
-        var existCategory = (await categoryRepository
-                            .SelectAllAsync())
-                            .FirstOrDefault(c => c.Id == id)
-                            ?? throw new CustomException(404, "Category is not found");
+        var existCategory = await categoryRepository.SelectByIdAsync(id)
+            ?? throw new CustomException(404, "Category is not found");
 
-        existCategory.Name = categoryUpdateModel.Name;
+        existCategory.Name = category.Name;
         existCategory.UpdatedAt = DateTime.UtcNow;
 
         await categoryRepository.UpdateAsync(existCategory);

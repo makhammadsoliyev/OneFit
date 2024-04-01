@@ -7,23 +7,16 @@ namespace OneFit.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UsersController : ControllerBase
+public class UsersController(IUserService userService) : ControllerBase
 {
-    private readonly IUserService userService;
-
-    public UsersController(IUserService userService)
-    {
-        this.userService = userService;
-    }
-
     // GET: api/<UsersController>
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {
         return Ok(new Response()
         {
-            StatusCode = 200,
             Message = "OK",
+            StatusCode = 200,
             Data = await userService.GetAllAsync()
         });
     }
@@ -34,8 +27,8 @@ public class UsersController : ControllerBase
     {
         return Ok(new Response()
         {
-            StatusCode = 200,
             Message = "OK",
+            StatusCode = 200,
             Data = await userService.GetByIdAsync(id)
         });
     }
@@ -46,8 +39,8 @@ public class UsersController : ControllerBase
     {
         return Ok(new Response()
         {
-            StatusCode = 200,
             Message = "OK",
+            StatusCode = 200,
             Data = await userService.CreateAsync(user)
         });
     }
@@ -58,8 +51,8 @@ public class UsersController : ControllerBase
     {
         return Ok(new Response()
         {
-            StatusCode = 200,
             Message = "OK",
+            StatusCode = 200,
             Data = await userService.UpdateAsync(id, user)
         });
     }
@@ -70,8 +63,8 @@ public class UsersController : ControllerBase
     {
         return Ok(new Response()
         {
-            StatusCode = 200,
             Message = "OK",
+            StatusCode = 200,
             Data = await userService.DeleteAsync(id)
         });
     }

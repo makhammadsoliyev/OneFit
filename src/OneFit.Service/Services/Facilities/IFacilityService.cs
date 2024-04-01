@@ -7,16 +7,17 @@ public interface IFacilityService
     /// <summary>
     /// Create new Facility 
     /// </summary>
-    /// <param name="facilityCreateModel"></param>
+    /// <param name="facility"></param>
     /// <returns></returns>
-    public Task<FacilityViewModel> CreateAsync(FacilityCreateModel facilityCreateModel);
+    public Task<FacilityViewModel> CreateAsync(FacilityCreateModel facility);
+
     /// <summary>
     /// Update exist Facility
     /// </summary>
     /// <param name="id"></param>
-    /// <param name="facilityUpdateModel"></param>
+    /// <param name="facility"></param>
     /// <returns></returns>
-    public Task<FacilityViewModel> UpdateAsync(long id,FacilityUpdateModel facilityUpdateModel);
+    public Task<FacilityViewModel> UpdateAsync(long id,FacilityUpdateModel facility);
 
     /// <summary>
     /// Delete exist Facility
@@ -24,12 +25,14 @@ public interface IFacilityService
     /// <param name="id"></param>
     /// <returns></returns>
     public Task<bool> DeleteAsync(long id);
+
     /// <summary>
     /// Get exist Facility via Id
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
     public Task<FacilityViewModel> GetByIdAsync(long id);
+
     /// <summary>
     /// Get list of exist Facilities
     /// </summary>

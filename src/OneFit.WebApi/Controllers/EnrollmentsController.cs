@@ -7,22 +7,16 @@ namespace OneFit.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EnrollmentsController : ControllerBase
+    public class EnrollmentsController(IEnrollmentService enrollmentService) : ControllerBase
     {
-        private readonly IEnrollmentService enrollmentService;
-        public EnrollmentsController(IEnrollmentService enrollmentService)
-        {
-            this.enrollmentService = enrollmentService;
-        }
-
         // GET api/<EnrollmentsController>
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
             return Ok(new Response()
             {
-                StatusCode = 200,
                 Message = "OK",
+                StatusCode = 200,
                 Data = await enrollmentService.GetAllAsync()
             });
         }
@@ -33,21 +27,21 @@ namespace OneFit.WebApi.Controllers
         {
             return Ok(new Response()
             {
-                StatusCode = 200,
                 Message = "OK",
+                StatusCode = 200,
                 Data = await enrollmentService.GetByIdAsync(id)
             });
         }
 
         // POST api/<EnrollmentsController>
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] EnrollmentCreateModel user)
+        public async Task<IActionResult> PostAsync([FromBody] EnrollmentCreateModel enrollment)
         {
             return Ok(new Response()
             {
-                StatusCode = 200,
                 Message = "OK",
-                Data = await enrollmentService.CreateAsync(user)
+                StatusCode = 200,
+                Data = await enrollmentService.CreateAsync(enrollment)
             });
         }
 
@@ -57,8 +51,8 @@ namespace OneFit.WebApi.Controllers
         {
             return Ok(new Response()
             {
-                StatusCode = 200,
                 Message = "OK",
+                StatusCode = 200,
                 Data = await enrollmentService.DeleteAsync(id)
             });
         }

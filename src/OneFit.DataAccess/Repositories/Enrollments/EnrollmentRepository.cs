@@ -10,21 +10,24 @@ public class EnrollmentRepository(AppDbContext context) : IEnrollmentRepository
     {
         using var connection = context.CreateConnection();
         var sql = """
-                DELETE "Enrollments" WHERE "Id" = @id;
+                DELETE FROM "Enrollments" WHERE "Id" = @id;
                 """;
 
         return await connection.ExecuteAsync(sql, new { id }) > 0;
     }
 
-    public async Task<Enrollment> InsertAsync(Enrollment model)
+    public async Task<Enrollment> InsertAsync(Enrollment enrollment)
     {
         using var connection = context.CreateConnection();
         var sql = """
                 INSERT INTO "Enrollments" ("StudioId", "UserId")
                 VALUES (@StudioId, @UserId)
+                    RETURNING * ;
                 """;
 
-        return await connection.ExecuteScalarAsync<Enrollment>(sql, model);
+        await connection.ExecuteScalarAsync(sql, enrollment);
+
+        return (await SelectAllAsync()).LastOrDefault();
     }
 
     public async Task<IEnumerable<Enrollment>> SelectAllAsync()
@@ -37,7 +40,7 @@ public class EnrollmentRepository(AppDbContext context) : IEnrollmentRepository
         return await connection.QueryAsync<Enrollment>(sql);
     }
 
-    public async Task<Enrollment> SelectByIdASync(long id)
+    public async Task<Enrollment> SelectByIdAsync(long id)
     {
         using var connection = context.CreateConnection();
         var sql = """
@@ -47,16 +50,16 @@ public class EnrollmentRepository(AppDbContext context) : IEnrollmentRepository
         return await connection.QuerySingleOrDefaultAsync<Enrollment>(sql, new { id });
     }
 
-    public async Task<bool> UpdateAsync(Enrollment model)
+    public async Task<bool> UpdateAsync(Enrollment enrollment)
     {
         using var connection = context.CreateConnection();
         var sql = """
                 UPDATE "Enrollments"
                 SET "UserId" = @UserId,
                     "StudioId" = @StudioId,
-                    "UpdatedAt" = current_timestamp
+                    "UpdatedAt" = current_timestamp;
                 """;
 
-        return await connection.ExecuteAsync(sql, model) > 0;
+        return await connection.ExecuteAsync(sql, enrollment) > 0;
     }
 }

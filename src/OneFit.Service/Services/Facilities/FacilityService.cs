@@ -6,58 +6,54 @@ using OneFit.Service.Exceptions;
 
 namespace OneFit.Service.Services.Facilities;
 
-public class FacilityService : IFacilityService
+public class FacilityService(IFacilityRepository facilityRepository, IMapper mapper) : IFacilityService
 {
-    private readonly IFacilityRepository _facilityRepository; 
-    private readonly IMapper _mapper;
-
-    public FacilityService(IFacilityRepository facilityRepository,IMapper mapper)
-    {
-        _facilityRepository = facilityRepository;
-        _mapper = mapper;
-    }
     public async Task<FacilityViewModel> CreateAsync(FacilityCreateModel facilityCreateModel)
     {
-        var existFacility = (await _facilityRepository
-                    .SelectAllAsync())
-                    .FirstOrDefault(f => f.Name == facilityCreateModel.Name) ;
+        var existFacility = (await facilityRepository
+                            .SelectAllAsync())
+                            .FirstOrDefault(f => f.Name == facilityCreateModel.Name) ;
         if(existFacility is not null)
-                    throw new CustomException(403,"Facility already exist");
-        var createFacility = await _facilityRepository
-                                    .InsertAsync(this._mapper
-                                    .Map<Facility>(facilityCreateModel));
-        return this._mapper.Map<FacilityViewModel>(createFacility);
+            throw new CustomException(403,"Facility already exist");
+
+        var createdFacility = await facilityRepository.InsertAsync(mapper.Map<Facility>(facilityCreateModel));
+
+        return mapper.Map<FacilityViewModel>(createdFacility);
     }
 
     public async Task<FacilityViewModel> UpdateAsync(long id,FacilityUpdateModel facilityUpdateModel)
     {
-        var existFacility = (await _facilityRepository
-                            .SelectAllAsync())
-                            .FirstOrDefault(f => f.Id == id)
-                            ??throw new CustomException(404,"Facility not found");
-        existFacility.Name = facilityUpdateModel.Name;
+        var existFacility = await facilityRepository.SelectByIdAsync(id)
+            ?? throw new CustomException(404, "Facility not found");
+
         existFacility.UpdatedAt = DateTime.UtcNow;
-        return this._mapper.Map<FacilityViewModel>(await _facilityRepository.
-                            UpdateAsync(existFacility));
+        existFacility.Name = facilityUpdateModel.Name;
+
+        await facilityRepository.UpdateAsync(existFacility);
+
+        return mapper.Map<FacilityViewModel>(existFacility);
     }
 
     public async Task<bool> DeleteAsync(long id)
     {
-        var existStudioFacility = await _facilityRepository.SelectByIdASync(id)
-                                  ??throw new CustomException(404,"Facility not found");
-        return await _facilityRepository.DeleteAsync(id);
+        _ = await facilityRepository.SelectByIdAsync(id)
+            ?? throw new CustomException(404, "Facility not found");
+
+        return await facilityRepository.DeleteAsync(id);
     }
 
     public async Task<FacilityViewModel> GetByIdAsync(long id)
     {
-        var existFacility = await _facilityRepository.SelectByIdASync(id)
-                            ??throw new CustomException(404,"Facility not found");
-        return this._mapper.Map<FacilityViewModel>(existFacility);
+        var facility = await facilityRepository.SelectByIdAsync(id)
+            ?? throw new CustomException(404, "Facility not found");
+
+        return mapper.Map<FacilityViewModel>(facility);
     }
 
     public async Task<IEnumerable<FacilityViewModel>> GetAllAsync()
     {
-        var existFacilities = await _facilityRepository.SelectAllAsync();
-        return this._mapper.Map<IEnumerable<FacilityViewModel>>(existFacilities);
+        var facilities = await facilityRepository.SelectAllAsync();
+
+        return mapper.Map<IEnumerable<FacilityViewModel>>(facilities);
     }
 }

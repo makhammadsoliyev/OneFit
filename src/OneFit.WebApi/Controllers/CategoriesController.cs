@@ -3,78 +3,69 @@ using OneFit.Service.DTOs.Categories;
 using OneFit.Service.Services.Categories;
 using OneFit.WebApi.Models;
 
-namespace OneFit.WebApi.Controllers
+namespace OneFit.WebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CategoriesController(ICategoryService categoryService) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CategoriesController : ControllerBase
+    // GET: api/<CategoriesController>
+    [HttpGet]
+    public async Task<IActionResult> GetAllAsync()
     {
-        private readonly ICategoryService categoryService;
-
-        public CategoriesController(ICategoryService categoryService)
+        return Ok(new Response()
         {
-            this.categoryService = categoryService;
-        }
+            StatusCode = 200,
+            Message = "OK",
+            Data = await categoryService.GetAllAsync()
+        });
+    }
 
-        // GET: api/<CategoriesController>
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+    // GET api/<CategoriesController>/
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetAsync(long id)
+    {
+        return Ok(new Response()
         {
-            return Ok(new Response()
-            {
-                StatusCode = 200,
-                Message = "OK",
-                Data = await categoryService.GetAllAsync()
-            });
-        }
+            StatusCode = 200,
+            Message = "OK",
+            Data = await categoryService.GetByIdAsync(id)
+        });
+    }
 
-        // GET api/<CategoriesController>/
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetAsync(long id)
+    // POST api/<CategoriesController>
+    [HttpPost]
+    public async Task<IActionResult> PostAsync([FromBody] CategoryCreateModel category)
+    {
+        return Ok(new Response()
         {
-            return Ok(new Response()
-            {
-                StatusCode = 200,
-                Message = "OK",
-                Data = await categoryService.GetByIdAsync(id)
-            });
-        }
+            StatusCode = 200,
+            Message = "OK",
+            Data = await categoryService.CreateAsync(category)
+        });
+    }
 
-        // POST api/<CategoriesController>
-        [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] CategoryCreateModel category)
+    // PUT api/<CategoriesController>/
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutASync(long id, [FromBody] CategoryUpdateModel category)
+    {
+        return Ok(new Response()
         {
-            return Ok(new Response()
-            {
-                StatusCode = 200,
-                Message = "OK",
-                Data = await categoryService.CreateAsync(category)
-            });
-        }
+            StatusCode = 200,
+            Message = "OK",
+            Data = await categoryService.UpdateAsync(id, category)
+        });
+    }
 
-        // PUT api/<CategoriesController>/
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutASync(long id, [FromBody] CategoryUpdateModel category)
+    // DELETE api/<CategoriesController>/
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        return Ok(new Response()
         {
-            return Ok(new Response()
-            {
-                StatusCode = 200,
-                Message = "OK",
-                Data = await categoryService.UpdateAsync(id, category)
-            });
-        }
-
-        // DELETE api/<CategoriesController>/
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
-        {
-            return Ok(new Response()
-            {
-                StatusCode = 200,
-                Message = "OK",
-                Data = await categoryService.DeleteAsync(id)
-            });
-        }
-
+            StatusCode = 200,
+            Message = "OK",
+            Data = await categoryService.DeleteAsync(id)
+        });
     }
 }

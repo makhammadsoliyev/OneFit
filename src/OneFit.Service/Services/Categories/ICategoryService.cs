@@ -7,16 +7,17 @@ public interface ICategoryService
     /// <summary>
     /// Create new Category 
     /// </summary>
-    /// <param name="categoryCreateModel"></param>
+    /// <param name="category"></param>
     /// <returns></returns>
-    public Task<CategoryViewModel> CreateAsync(CategoryCreateModel categoryCreateModel);
+    public Task<CategoryViewModel> CreateAsync(CategoryCreateModel category);
+
     /// <summary>
     /// Update exist Category
     /// </summary>
     /// <param name="id"></param>
-    /// <param name="categoryUpdateModel"></param>
+    /// <param name="category"></param>
     /// <returns></returns>
-    public Task<CategoryViewModel> UpdateAsync(long id, CategoryUpdateModel categoryUpdateModel);
+    public Task<CategoryViewModel> UpdateAsync(long id, CategoryUpdateModel category);
 
     /// <summary>
     /// Delete exist Category
@@ -24,12 +25,14 @@ public interface ICategoryService
     /// <param name="id"></param>
     /// <returns></returns>
     public Task<bool> DeleteAsync(long id);
+
     /// <summary>
     /// Get exist Category via ID
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
     public Task<CategoryViewModel> GetByIdAsync(long id);
+
     /// <summary>
     /// Get list of exist Categories
     /// </summary>
